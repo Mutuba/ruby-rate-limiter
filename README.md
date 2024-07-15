@@ -11,6 +11,15 @@ ruby_rate_limiter is a Ruby gem that implements a rate limiting mechanism using 
 
 ## Installation
 
-```
 Add `ruby_rate_limiter` to your application's Gemfile:
+
+```
+gem 'ruby_rate_limiter'
+
+```
+
+Alternatively, you can install the gem directly using:
+
+```
+gem install ruby_rate_limiter
 ```
