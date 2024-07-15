@@ -39,26 +39,56 @@ First, configure the RateLimiter::TokenBucket with a unique identifier for each 
 Create a file in the initialize directory
 
 ```ruby
+# config/initializers/ruby_rate_limiter.rb
 require 'ruby_rate_limiter'
 require 'redis'
 
-# Initialize Redis connection
-redis_client = Redis.new(url: 'redis://localhost:6379/1')
+module RateLimiter
+  def self.bucket
+    @bucket ||= RubyRateLimiter::TokenBucket.new(
+      'user123',
+      storage: RubyRateLimiter::Storage::RedisStorage.new(redis_client),
+      bucket_size: 10,   # Optional: specify bucket size
+      refill_rate: 2     # Optional: specify refill rate (tokens per second)
+    )
+  end
 
-# Initialize the TokenBucket
-bucket = RubyRateLimiter::TokenBucket.new(
-  'user123',
-  storage: RubyRateLimiter::Storage::RedisStorage.new(redis_client),
-  bucket_size: 10,   # Optional: specify bucket size
-  refill_rate: 2     # Optional: specify refill rate (tokens per second)
-)
+  private
 
-# Usage example
-if bucket.allow_request?
-  # Process the request
-else
-  # Rate limit exceeded
-  render status: 429, json: { error: 'Too many requests' }
+  def self.redis_client
+    @redis_client ||= Redis.new(url: 'redis://localhost:6379/1')
+  end
+end
+
+```
+
+### Usage somewhere, in the controller or better still in a service
+
+```ruby
+class SomeController < ApplicationController
+  def some_action
+    if RateLimiter.bucket.allow_request?
+      # Process the request
+      render json: { message: 'Request processed' }
+    else
+      # Rate limit exceeded
+      render status: 429, json: { error: 'Too many requests' }
+    end
+  end
+end
+```
+
+```ruby
+class SomeService
+  def perform
+    if RateLimiter.bucket.allow_request?
+      # Process the request
+      # Perform the service logic here
+    else
+      # Rate limit exceeded
+      raise 'Too many requests'
+    end
+  end
 end
 
 ```
