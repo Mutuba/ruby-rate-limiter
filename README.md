@@ -18,6 +18,12 @@ gem 'ruby_rate_limiter'
 
 ```
 
+Then run:
+
+```
+bundle install
+```
+
 Alternatively, you can install the gem directly using:
 
 ```
