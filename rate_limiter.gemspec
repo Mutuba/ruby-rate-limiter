@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors = ["Mutuba"]
   spec.email = ["danielmutubait@gmail.com"]
 
-  spec.summary = "Write a short summary, because RubyGems requires one."
-  spec.description = "Write a longer description or delete this line."
+  spec.summary       = 'Rate Limiter using Token Bucket Algorithm'
+  spec.description   = 'A Ruby gem for rate limiting using the token bucket algorithm.'
   spec.homepage = "https://github.com/Mutuba/rate-limiter"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.6.0"
@@ -28,7 +28,8 @@ Gem::Specification.new do |spec|
   #       f.start_with?(*%w[bin/ test/ spec/ features/ .git .circleci appveyor Gemfile])
   #   end
   # end
-  spec.files         = Dir["lib/**/*.rb"]
+
+  spec.files         = Dir['lib/**/*', 'README.md', 'LICENSE']
   spec.bindir = "exe"
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
