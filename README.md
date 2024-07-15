@@ -29,3 +29,9 @@ Alternatively, you can install the gem directly using:
 ```
 gem install ruby_rate_limiter
 ```
+
+# Usage
+
+### Configuration
+
+First, configure the RateLimiter::TokenBucket with a unique identifier for each user and specify the storage backend (e.g., Redis).
