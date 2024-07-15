@@ -1,3 +1,4 @@
+# lib/ruby_rate_limiter/storage/abstract_storage.rb
 module RubyRateLimiter
   module Storage
     class AbstractStorage

@@ -1,11 +1,12 @@
+# lib/ruby_rate_limiter/storage/redis_storage.rb
 require 'redis'
 require_relative 'abstract_storage'
 
 module RubyRateLimiter
   module Storage
     class RedisStorage < AbstractStorage
-      def initialize
-        @redis = Redis.new
+      def initialize(redis_client = Redis.new)
+        @redis = redis_client
       end
 
       def get(key)
