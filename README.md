@@ -38,14 +38,27 @@ First, configure the RateLimiter::TokenBucket with a unique identifier for each 
 
 Create a file in the initialize directory
 
-```
-    # config/initializers/ruby_rate_limiter.rb
-    require 'ruby_rate_limiter'
-    require 'redis'
+```ruby
+require 'ruby_rate_limiter'
+require 'redis'
 
-    redis_client = Redis.new(url: 'redis://localhost:6379/1') # Example configuration
-    bucket = RubyRateLimiter::TokenBucket.new(
-    'user123',
-    storage: RubyRateLimiter::Storage::RedisStorage.new(redis_client)
-    )
+# Initialize Redis connection
+redis_client = Redis.new(url: 'redis://localhost:6379/1')
+
+# Initialize the TokenBucket
+bucket = RubyRateLimiter::TokenBucket.new(
+  'user123',
+  storage: RubyRateLimiter::Storage::RedisStorage.new(redis_client),
+  bucket_size: 10,   # Optional: specify bucket size
+  refill_rate: 2     # Optional: specify refill rate (tokens per second)
+)
+
+# Usage example
+if bucket.allow_request?
+  # Process the request
+else
+  # Rate limit exceeded
+  render status: 429, json: { error: 'Too many requests' }
+end
+
 ```
