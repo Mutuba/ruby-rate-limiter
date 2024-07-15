@@ -4,10 +4,10 @@
 
 ## Features
 
-- \*\* Token Bucket Algorithm: A flexible and efficient algorithm for rate limiting.
-- \*\* Redis Backend: Utilizes Redis for token storage and management.
-- \*\* Customizable Parameters: Configure the bucket size and refill rate to meet your needs.
-- \*\* Supports Time Travel: For easier testing with time manipulation.
+- Token Bucket Algorithm: A flexible and efficient algorithm for rate limiting.
+- Redis Backend: Utilizes Redis for token storage and management.
+- Customizable Parameters: Configure the bucket size and refill rate to meet your needs.
+- Supports Time Travel: For easier testing with time manipulation.
 
 ## Installation
 
