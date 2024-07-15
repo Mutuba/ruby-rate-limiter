@@ -2,7 +2,7 @@ require 'forwardable'
 require_relative 'storage/abstract_storage'
 require_relative 'storage/redis_storage'
 
-module RateLimiter
+module RubyRateLimiter
   class TokenBucket
     extend Forwardable
 

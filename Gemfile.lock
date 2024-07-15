@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rate_limiter (0.1.0)
+    ruby_rate_limiter (0.1.0)
       redis
 
 GEM
@@ -157,9 +157,9 @@ DEPENDENCIES
   factory_bot_rails (~> 6.2)
   pry-rails
   rake (~> 13.0)
-  rate_limiter!
   rspec (~> 3.0)
   rubocop (~> 1.0)
+  ruby_rate_limiter!
   timecop
 
 BUNDLED WITH

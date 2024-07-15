@@ -1,10 +1,10 @@
 require 'spec_helper'
-require 'rate_limiter/token_bucket'
-require 'rate_limiter/storage/redis_storage'
+require 'ruby_rate_limiter/token_bucket'
+require 'ruby_rate_limiter/storage/redis_storage'
 
-RSpec.describe RateLimiter::TokenBucket do
+RSpec.describe RubyRateLimiter::TokenBucket do
   let(:user_id) { 'user123' }
-  let(:storage) { RateLimiter::Storage::RedisStorage.new }
+  let(:storage) { RubyRateLimiter::Storage::RedisStorage.new }
   let(:bucket) { described_class.new(user_id, storage: storage) }
 
   before do

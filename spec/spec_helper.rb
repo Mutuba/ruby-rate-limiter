@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "rate_limiter"
+require "ruby_rate_limiter"
 require 'pry'
 require 'timecop'
 

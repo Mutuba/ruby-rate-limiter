@@ -1,4 +1,4 @@
-module RateLimiter
+module RubyRateLimiter
   module Storage
     class AbstractStorage
       def get(_key)

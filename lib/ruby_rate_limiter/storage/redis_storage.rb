@@ -1,7 +1,7 @@
 require 'redis'
 require_relative 'abstract_storage'
 
-module RateLimiter
+module RubyRateLimiter
   module Storage
     class RedisStorage < AbstractStorage
       def initialize
