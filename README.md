@@ -30,7 +30,7 @@ Alternatively, you can install the gem directly using:
 gem install ruby_rate_limiter
 ```
 
-# Usage
+## Usage
 
 ### Configuration
 
