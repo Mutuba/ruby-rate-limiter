@@ -92,3 +92,9 @@ class SomeService
 end
 
 ```
+
+Contributing
+Bug reports and pull requests are welcome on GitHub at [[YOUR_REPO_URL](https://github.com/Mutuba/ruby-rate-limiter)].
+
+License
+The gem is available as open source under the terms of the MIT License.

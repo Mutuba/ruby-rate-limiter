@@ -10,15 +10,15 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Rate Limiter using Token Bucket Algorithm'
   spec.description   = 'A Ruby gem for rate limiting using the token bucket algorithm.'
-  spec.homepage = "https://github.com/Mutuba/rate-limiter"
+  spec.homepage = "https://github.com/Mutuba/ruby-rate-limiter"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.6.0"
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.homepage = "https://github.com/Mutuba/rate-limiter"
-  spec.metadata["changelog_uri"] = "https://github.com/Mutuba/limiter/blob/main/CHANGELOG.md"
+  spec.homepage = "https://github.com/Mutuba/ruby-rate-limiter"
+  spec.metadata["changelog_uri"] = "https://github.com/Mutuba/ruby-rate-limiter/blob/main/CHANGELOG.md"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
