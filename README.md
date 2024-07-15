@@ -44,57 +44,64 @@ require 'ruby_rate_limiter'
 require 'redis'
 
 module RateLimiter
-  def self.bucket
-    @bucket ||= RubyRateLimiter::TokenBucket.new(
-      'user123',
+  DEFAULT_BUCKET_SIZE = 10
+  DEFAULT_REFILL_RATE = 1
+  DEFAULT_TIME_UNIT = :minute
+
+  def self.for(user_identifier:, bucket_size: DEFAULT_BUCKET_SIZE, refill_rate: DEFAULT_REFILL_RATE, time_unit: DEFAULT_TIME_UNIT)
+    RubyRateLimiter::TokenBucket.new(
+      user_identifier: user_identifier,
       storage: RubyRateLimiter::Storage::RedisStorage.new(redis_client),
-      bucket_size: 10,   # Optional: specify bucket size
-      refill_rate: 2     # Optional: specify refill rate (tokens per second)
+      bucket_size: bucket_size,
+      refill_rate: refill_rate,
+      time_unit: time_unit
     )
   end
 
   private
 
   def self.redis_client
-    @redis_client ||= Redis.new(url: 'redis://localhost:6379/1')
+    @redis_client ||= Redis.new(url: ENV['REDIS_URL'])
   end
 end
+
+
 
 ```
 
 ### Usage somewhere, in the controller or better still in a service
 
+````
+Maybe have some service
+
+```ruby
+class RateLimiterService
+  def self.rate_limit_exceeded?(user_identifier)
+    rate_limiter = RateLimiter.for(user_identifier: user_identifier)
+    !rate_limiter.allow_request?
+  end
+end
+
+````
+
+Usage in the controller
+
 ```ruby
 class SomeController < ApplicationController
   def some_action
-    if RateLimiter.bucket.allow_request?
+    user_identifier = current_user ? "user:#{current_user.id}" : "ip:#{request.remote_ip}"
+    if RateLimiterService.rate_limit_exceeded?(user_identifier)
+      render status: 429, json: { error: 'Too many requests' }
+    else
       # Process the request
       render json: { message: 'Request processed' }
-    else
-      # Rate limit exceeded
-      render status: 429, json: { error: 'Too many requests' }
     end
   end
 end
-```
-
-```ruby
-class SomeService
-  def perform
-    if RateLimiter.bucket.allow_request?
-      # Process the request
-      # Perform the service logic here
-    else
-      # Rate limit exceeded
-      raise 'Too many requests'
-    end
-  end
-end
-
-```
 
 Contributing
 Bug reports and pull requests are welcome on GitHub at https://github.com/Mutuba/ruby-rate-limiter.
 
 License
 The gem is available as open source under the terms of the MIT License.
+```
