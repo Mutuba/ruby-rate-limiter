@@ -9,13 +9,18 @@ module RubyRateLimiter
 
     DEFAULT_BUCKET_SIZE = 10
     DEFAULT_REFILL_RATE = 1
+    TIME_UNITS = {
+      second: 1,
+      minute: 60,
+      hour: 3600
+    }.freeze
 
     def_delegators :@storage, :get, :set
 
-    def initialize(user_id, bucket_size: DEFAULT_BUCKET_SIZE, refill_rate: DEFAULT_REFILL_RATE, storage: RateLimiter::Storage::RedisStorage.new)
+    def initialize(user_id, bucket_size: DEFAULT_BUCKET_SIZE, refill_rate: DEFAULT_REFILL_RATE, time_unit: :second, storage: RubyRateLimiter::Storage::RedisStorage.new)
       @user_id = user_id
       @bucket_size = bucket_size
-      @refill_rate = refill_rate
+      @refill_rate = refill_rate * TIME_UNITS[time_unit]
       @storage = storage
     end
 
