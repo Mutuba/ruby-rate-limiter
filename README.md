@@ -71,7 +71,6 @@ end
 
 ### Usage somewhere, in the controller or better still in a service
 
-````
 Maybe have some service
 
 ```ruby
@@ -82,7 +81,7 @@ class RateLimiterService
   end
 end
 
-````
+```
 
 Usage in the controller
 
