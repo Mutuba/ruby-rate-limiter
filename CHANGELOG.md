@@ -8,4 +8,4 @@
 
 ## [2.0.2] - 2024-07-15
 
-- Second release
+- Latest release
