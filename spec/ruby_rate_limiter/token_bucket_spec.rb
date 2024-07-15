@@ -4,8 +4,8 @@ require 'ruby_rate_limiter/storage/redis_storage'
 
 RSpec.describe RubyRateLimiter::TokenBucket do
   let(:user_id) { 'user123' }
-  let(:storage) { RubyRateLimiter::Storage::RedisStorage.new }
-  let(:bucket) { described_class.new(user_id, storage: storage) }
+  let(:storage) { RubyRateLimiter::Storage::RedisStorage.new() }
+  let(:bucket) { described_class.new(user_identifier: user_id, storage: storage) }
 
   before do
     storage.set("#{user_id}_tokens", nil)
