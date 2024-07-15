@@ -19,13 +19,13 @@ module RubyRateLimiter
     def_delegators :@storage, :get, :set
 
     def initialize(
-      user_id,
+      user_identifier:,
       bucket_size: DEFAULT_BUCKET_SIZE,
       refill_rate: DEFAULT_REFILL_RATE,
       time_unit: :second,
       storage: DEFAULT_STORAGE
     )
-      @user_id = user_id
+      @user_id = user_identifier
       @bucket_size = bucket_size
       @refill_rate_per_second = refill_rate.to_f / TIME_UNITS[time_unit]
       @storage = storage
