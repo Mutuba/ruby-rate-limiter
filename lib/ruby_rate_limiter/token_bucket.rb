@@ -1,12 +1,12 @@
 # lib/ruby_rate_limiter/token_bucket.rb
 require 'forwardable'
+require 'logger'
 require_relative 'storage/abstract_storage'
 require_relative 'storage/redis_storage'
 
 module RubyRateLimiter
   class TokenBucket
     extend Forwardable
-
     DEFAULT_BUCKET_SIZE = 10
     DEFAULT_REFILL_RATE = 1
     DEFAULT_STORAGE = RubyRateLimiter::Storage::RedisStorage.new
@@ -29,18 +29,21 @@ module RubyRateLimiter
       @bucket_size = bucket_size
       @refill_rate_per_second = refill_rate.to_f / TIME_UNITS[time_unit]
       @storage = storage
+
+      @logger = Logger.new(STDOUT)
+      @logger.level = Logger::DEBUG 
       initialize_bucket
     end
 
     def allow_request?
       refill_tokens
       tokens = get_bucket_size
-      puts "Allow request: tokens before = #{tokens}" # Debugging line
+      @logger.info "Allow request: tokens before = #{tokens}" 
 
       return false if tokens < 1
 
       update_bucket_size(tokens - 1)
-      puts "Allow request: tokens after = #{get_bucket_size}" # Debugging line
+      @logger.info "Allow request: tokens after = #{get_bucket_size}" 
       true
     end
 
@@ -50,19 +53,17 @@ module RubyRateLimiter
       if @storage.get("#{@user_id}_tokens").nil?
         update_bucket_size(@bucket_size)
         update_last_refill_time(Time.now.to_f)
-        puts "Initialized bucket: tokens = #{@bucket_size}, time = #{Time.now.to_f}"
+        @logger.info "Initialized bucket: tokens = #{@bucket_size}, time = #{Time.now.to_f}"
       end
     end
 
     def get_bucket_size
       size = (@storage.get("#{@user_id}_tokens") || @bucket_size).to_i
-      puts "get_bucket_size: #{@user_id}_tokens = #{size}" # Debugging line
       size
     end
 
     def get_last_refill_time
       last_refill = (@storage.get("#{@user_id}_last_refill") || Time.now.to_f).to_f
-      puts "get_last_refill_time: #{@user_id}_last_refill = #{last_refill}" # Debugging line
       last_refill
     end
 
@@ -80,18 +81,15 @@ module RubyRateLimiter
       elapsed_time = current_time - last_refill_time
     
       if elapsed_time < 0
-        puts "Warning: elapsed_time is negative. Adjusting to zero."
         elapsed_time = 0
       end
     
       new_tokens = (elapsed_time * @refill_rate_per_second).to_i
-      puts "Refill tokens: current_time = #{current_time}, last_refill_time = #{last_refill_time}, elapsed_time = #{elapsed_time}, new_tokens = #{new_tokens}" # Debugging line
-    
+
       if new_tokens > 0
         tokens = [get_bucket_size + new_tokens, @bucket_size].min
         update_bucket_size(tokens)
         update_last_refill_time(current_time)
-        puts "Refill tokens: updated tokens = #{tokens}, current_time = #{current_time}" # Debugging line
       end
     end
   end

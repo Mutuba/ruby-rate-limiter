@@ -25,7 +25,7 @@ RSpec.describe RubyRateLimiter::TokenBucket do
     end
     expect(bucket.allow_request?).to be false
 
-    Timecop.travel(Time.now + 3000) # travel 5 minutes ahead    
+    Timecop.travel(Time.now + 300) # travel 5 minutes ahead    
     expect(bucket.allow_request?).to be true
   end
 end
