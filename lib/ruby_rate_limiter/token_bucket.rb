@@ -1,8 +1,3 @@
-# lib/ruby_rate_limiter/token_bucket.rb
-require 'forwardable'
-require_relative 'storage/abstract_storage'
-require_relative 'storage/redis_storage'
-
 module RubyRateLimiter
   class TokenBucket
     extend Forwardable
@@ -35,6 +30,7 @@ module RubyRateLimiter
       refill_tokens
       tokens = get_bucket_size
       puts "Allow request: tokens before = #{tokens}" # Debugging line
+
       return false if tokens < 1
 
       update_bucket_size(tokens - 1)
@@ -46,33 +42,30 @@ module RubyRateLimiter
 
     def get_bucket_size
       size = (@storage.get("#{@user_id}_tokens") || @bucket_size).to_i
-      puts "get_bucket_size: #{@user_id}_tokens = #{size}"
+      puts "get_bucket_size: #{@user_id}_tokens = #{size}" # Debugging line
       size
     end
 
     def get_last_refill_time
-      time = (@storage.get("#{@user_id}_last_refill") || Time.now.to_f).to_f
-      puts "get_last_refill_time: #{@user_id}_last_refill = #{time}"
-      time
+      last_refill = (@storage.get("#{@user_id}_last_refill") || Time.now.to_f).to_f
+      puts "get_last_refill_time: #{@user_id}_last_refill = #{last_refill}" # Debugging line
+      last_refill
     end
 
     def update_bucket_size(tokens)
-      puts "update_bucket_size: #{@user_id}_tokens = #{tokens}"
       @storage.set("#{@user_id}_tokens", tokens)
     end
 
     def update_last_refill_time(timestamp)
       @storage.set("#{@user_id}_last_refill", timestamp)
-      puts "update_last_refill_time: #{@user_id}_last_refill = #{timestamp}"
     end
 
     def refill_tokens
       current_time = Time.now.to_f
       last_refill_time = get_last_refill_time
       elapsed_time = current_time - last_refill_time
-
       new_tokens = (elapsed_time * @refill_rate_per_second).to_i
-      puts "Refill tokens: elapsed_time = #{elapsed_time}, new_tokens = #{new_tokens}" # Debugging line
+      puts "Refill tokens: current_time = #{current_time}, last_refill_time = #{last_refill_time}, elapsed_time = #{elapsed_time}, new_tokens = #{new_tokens}" # Debugging line
 
       return if new_tokens <= 0
 
