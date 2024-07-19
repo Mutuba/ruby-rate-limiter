@@ -5,7 +5,7 @@ require 'ruby_rate_limiter/storage/redis_storage'
 RSpec.describe RubyRateLimiter::TokenBucket do
   let(:user_id) { 'user123' }
   let(:storage) { RubyRateLimiter::Storage::RedisStorage.new() }
-  let(:bucket) { described_class.new(user_identifier: user_id, storage: storage) }
+  let(:bucket) { described_class.new(user_identifier: user_id, storage: storage, time_unit: :minute) }
 
   before do
     storage.set("#{user_id}_tokens", nil)
@@ -25,7 +25,7 @@ RSpec.describe RubyRateLimiter::TokenBucket do
     end
     expect(bucket.allow_request?).to be false
 
-    Timecop.travel(Time.now + 3000) # travel 5 minutes ahead
+    Timecop.travel(Time.now + 3000) # travel 5 minutes ahead    
     expect(bucket.allow_request?).to be true
   end
 end

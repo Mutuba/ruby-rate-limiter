@@ -43,19 +43,25 @@ module RubyRateLimiter
     private
 
     def get_bucket_size
-      (@storage.get("#{@user_id}_tokens") || @bucket_size).to_i
+      size = (@storage.get("#{@user_id}_tokens") || @bucket_size).to_i
+      puts "get_bucket_size: #{@user_id}_tokens = #{size}"
+      size
     end
 
     def get_last_refill_time
-      (@storage.get("#{@user_id}_last_refill") || Time.now.to_f).to_f
+      time = (@storage.get("#{@user_id}_last_refill") || Time.now.to_f).to_f
+      puts "get_last_refill_time: #{@user_id}_last_refill = #{time}"
+      time
     end
 
     def update_bucket_size(tokens)
+      puts "update_bucket_size: #{@user_id}_tokens = #{tokens}"
       @storage.set("#{@user_id}_tokens", tokens)
     end
 
     def update_last_refill_time(timestamp)
       @storage.set("#{@user_id}_last_refill", timestamp)
+      puts "update_last_refill_time: #{@user_id}_last_refill = #{timestamp}"
     end
 
     def refill_tokens
