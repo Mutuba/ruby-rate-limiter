@@ -29,6 +29,7 @@ module RubyRateLimiter
       @bucket_size = bucket_size
       @refill_rate_per_second = refill_rate.to_f / TIME_UNITS[time_unit]
       @storage = storage
+      initialize_bucket
     end
 
     def allow_request?
@@ -44,6 +45,13 @@ module RubyRateLimiter
     end
 
     private
+
+    def initialize_bucket
+      if get_bucket_size.nil?
+        update_bucket_size(@bucket_size)
+        update_last_refill_time(Time.now.to_f)
+      end
+    end
 
     def get_bucket_size
       size = (@storage.get("#{@user_id}_tokens") || @bucket_size).to_i
