@@ -34,9 +34,11 @@ module RubyRateLimiter
     def allow_request?
       refill_tokens
       tokens = get_bucket_size
+      puts "Allow request: tokens before = #{tokens}" # Debugging line
       return false if tokens < 1
 
       update_bucket_size(tokens - 1)
+      puts "Allow request: tokens after = #{get_bucket_size}" # Debugging line
       true
     end
 
@@ -70,11 +72,14 @@ module RubyRateLimiter
       elapsed_time = current_time - last_refill_time
 
       new_tokens = (elapsed_time * @refill_rate_per_second).to_i
+      puts "Refill tokens: elapsed_time = #{elapsed_time}, new_tokens = #{new_tokens}" # Debugging line
+
       return if new_tokens <= 0
 
       tokens = [get_bucket_size + new_tokens, @bucket_size].min
       update_bucket_size(tokens)
       update_last_refill_time(current_time)
+      puts "Refill tokens: updated tokens = #{tokens}, current_time = #{current_time}" # Debugging line
     end
   end
 end
