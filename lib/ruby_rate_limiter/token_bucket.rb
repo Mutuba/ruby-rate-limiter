@@ -50,7 +50,7 @@ module RubyRateLimiter
     private
 
     def initialize_bucket
-      if @storage.get("#{@user_id}_tokens").nil?
+      if @storage.get("#{@user_id}_tokens").empty?
         update_bucket_size(@bucket_size)
         update_last_refill_time(Time.now.to_f)
         @logger.info "Initialized bucket: tokens = #{@bucket_size}, time = #{Time.now.to_f}"

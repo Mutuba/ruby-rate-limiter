@@ -1,6 +1,5 @@
 # lib/ruby_rate_limiter/storage/redis_storage.rb
 require 'redis'
-require_relative 'abstract_storage'
 
 module RubyRateLimiter
   module Storage
@@ -14,7 +13,15 @@ module RubyRateLimiter
       end
 
       def set(key, value)
-        @redis.set(key, value)
+        @redis.setnx(key, value)
+      end
+
+      def watch(key, &block)
+        @redis.watch(key, &block)
+      end
+
+      def multi(&block)
+        @redis.multi(&block)
       end
     end
   end
