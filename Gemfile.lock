@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ruby_rate_limiter (2.0.2)
+    ruby_rate_limiter (2.0.6)
       redis
 
 GEM

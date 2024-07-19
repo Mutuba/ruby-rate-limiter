@@ -77,15 +77,21 @@ module RubyRateLimiter
       current_time = Time.now.to_f
       last_refill_time = get_last_refill_time
       elapsed_time = current_time - last_refill_time
+    
+      if elapsed_time < 0
+        puts "Warning: elapsed_time is negative. Adjusting to zero."
+        elapsed_time = 0
+      end
+    
       new_tokens = (elapsed_time * @refill_rate_per_second).to_i
       puts "Refill tokens: current_time = #{current_time}, last_refill_time = #{last_refill_time}, elapsed_time = #{elapsed_time}, new_tokens = #{new_tokens}" # Debugging line
-
-      return if new_tokens <= 0
-
-      tokens = [get_bucket_size + new_tokens, @bucket_size].min
-      update_bucket_size(tokens)
-      update_last_refill_time(current_time)
-      puts "Refill tokens: updated tokens = #{tokens}, current_time = #{current_time}" # Debugging line
+    
+      if new_tokens > 0
+        tokens = [get_bucket_size + new_tokens, @bucket_size].min
+        update_bucket_size(tokens)
+        update_last_refill_time(current_time)
+        puts "Refill tokens: updated tokens = #{tokens}, current_time = #{current_time}" # Debugging line
+      end
     end
   end
 end
