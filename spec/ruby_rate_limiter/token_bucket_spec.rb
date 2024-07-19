@@ -60,10 +60,7 @@ RSpec.describe RubyRateLimiter::TokenBucket do
     5.times do
       threads << Thread.new { expect(bucket.allow_request?).to be true }
     end
-    threads.each(&:join)
-    
-    # binding.pry
-    
+    threads.each(&:join)    
     expect(storage.get("#{user_id}_tokens").to_i).to eq(5)
   end
 end
