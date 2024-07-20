@@ -90,8 +90,13 @@ module RubyRateLimiter
         tokens = [get_bucket_size + new_tokens, @bucket_size].min
         update_bucket_size(tokens)
         update_last_refill_time(current_time)
+         # Adjust the refill timestamp forward by the time equivalent to the number of tokens added
+         new_last_refill_time = last_refill_time + (new_tokens / @refill_rate_per_second)
+         update_last_refill_time(new_last_refill_time)
       end
     end
   end
 end
+
+
 

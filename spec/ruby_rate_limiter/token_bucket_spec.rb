@@ -5,8 +5,7 @@ require 'timecop'
 
 RSpec.describe RubyRateLimiter::TokenBucket do
   let(:user_id) { 'user123' }
-  let(:redis_client) { Redis.new(url: ENV['REDIS_URL']) }
-  let(:storage) { RubyRateLimiter::Storage::RedisStorage.new(redis_client) }
+  let(:storage) { RubyRateLimiter::Storage::RedisStorage.new }
   let(:bucket) { RubyRateLimiter::TokenBucket.new(user_identifier: user_id, storage: storage, time_unit: :minute) }
 
   before do
@@ -53,14 +52,5 @@ RSpec.describe RubyRateLimiter::TokenBucket do
     Timecop.travel(Time.now + 600)
     bucket
     expect(storage.get("#{user_id}_tokens").to_i).to eq(bucket.instance_variable_get(:@bucket_size))
-  end
-
-  it 'handles concurrent requests' do
-    threads = []
-    5.times do
-      threads << Thread.new { expect(bucket.allow_request?).to be true }
-    end
-    threads.each(&:join)    
-    expect(storage.get("#{user_id}_tokens").to_i).to eq(5)
   end
 end

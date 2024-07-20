@@ -3,25 +3,19 @@ require 'redis'
 
 module RubyRateLimiter
   module Storage
-    class RedisStorage < AbstractStorage
-      def initialize(redis_client = Redis.new)
-        @redis = redis_client
+    class RedisStorage
+      attr_reader :redis
+
+      def initialize(redis = Redis.new)
+        @redis = redis
       end
 
       def get(key)
-        @redis.get(key)
+        redis.get(key)
       end
 
       def set(key, value)
-        @redis.setnx(key, value)
-      end
-
-      def watch(key, &block)
-        @redis.watch(key, &block)
-      end
-
-      def multi(&block)
-        @redis.multi(&block)
+        redis.set(key, value)
       end
     end
   end
