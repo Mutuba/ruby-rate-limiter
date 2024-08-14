@@ -97,10 +97,10 @@ class SomeController < ApplicationController
     end
   end
 end
+```
 
 Contributing
 Bug reports and pull requests are welcome on GitHub at https://github.com/Mutuba/ruby-rate-limiter.
 
 License
 The gem is available as open source under the terms of the MIT License.
-```
